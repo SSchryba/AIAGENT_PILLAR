@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  ai-agent:
+    build: .
+    container_name: ai-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - AGENT_NAME=Lila
+      - AGENT_TONE=Curious, witty, emotionally intelligent
+      - MEMORY_PERSIST_DIR=/app/db
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=False
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/agent.log
+      - MEMORY_COMPRESSION=True
+      - MEMORY_MAX_MESSAGES=1000
+      - MEMORY_CLEANUP_INTERVAL=24
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./db:/app/db
+      - ./logs:/app/logs
+      - ./templates:/app/templates
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ai-agent-network
+
+  # Optional: Add a reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: ai-agent-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - ai-agent
+    restart: unless-stopped
+    networks:
+      - ai-agent-network
+    profiles:
+      - production
+
+networks:
+  ai-agent-network:
+    driver: bridge
+
+volumes:
+  ai-agent-data:
+    driver: local 

@@ -1,0 +1,83 @@
+# AI Agent Environment Configuration
+# Copy this file to .env and modify the values as needed
+
+# Agent Identity
+AGENT_NAME=Lila
+AGENT_TONE=Curious, witty, emotionally intelligent
+
+# Performance Settings
+MEMORY_COMPRESSION=True
+MEMORY_MAX_MESSAGES=1000
+MEMORY_CLEANUP_INTERVAL=24
+
+# Security Settings
+RATE_LIMIT=100
+SECRET_KEY=your_secret_key_here
+
+# Monitoring Settings
+LOG_LEVEL=INFO
+LOG_FILE=agent.log
+
+# API Keys (optional - for fallback models)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Web Interface Settings
+HOST=localhost
+PORT=8000
+DEBUG=False
+
+# LLM Model Settings
+DEFAULT_MODEL=mistral-7b
+MODEL_TIMEOUT=30
+ENABLE_QUANTIZATION=True
+DEVICE_MAP=auto
+
+# Voice Synthesis Settings
+VOICE_ENGINE=tts
+VOICE_NAME=tts_models/en/ljspeech/tacotron2-DDC
+VOICE_QUALITY=medium
+VOICE_SPEED=1.0
+VOICE_PITCH=1.0
+VOICE_VOLUME=1.0
+VOICE_LANGUAGE=en
+VOICE_SAMPLE_RATE=22050
+ENABLE_VOICE_CLONING=False
+ENABLE_VOICE_EMOTION=False
+ENABLE_REAL_TIME_VOICE=False
+VOICE_STREAMING_PORT=8765
+
+# Performance Optimization
+ENABLE_CACHING=True
+CACHE_TTL=3600
+MAX_CONCURRENT_REQUESTS=10
+REQUEST_TIMEOUT=30
+ENABLE_COMPRESSION=True
+MODEL_SWITCHING_ENABLED=True
+VOICE_CACHING_ENABLED=True
+
+# Tool Configuration
+WEB_SEARCH_ENABLED=False
+FILE_OPERATIONS_ENABLED=True
+SYSTEM_INFO_ENABLED=True
+WEATHER_ENABLED=False
+CALENDAR_ENABLED=False
+VOICE_RECORDING_ENABLED=True
+
+# Memory Settings
+MEMORY_MAX_MESSAGES=100
+MEMORY_SUMMARY_THRESHOLD=50
+MEMORY_RETENTION_DAYS=30
+VECTOR_SEARCH_ENABLED=True
+
+# Security Configuration
+REQUIRE_AUTHENTICATION=False
+ALLOWED_ORIGINS=["http://localhost:3000", "http://127.0.0.1:3000"]
+SESSION_TIMEOUT=3600
+MAX_REQUEST_SIZE=10MB
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FILE=agent.log
+LOG_FORMAT=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+LOG_MAX_SIZE=10MB
+LOG_BACKUP_COUNT=5 
