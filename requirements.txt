@@ -1,0 +1,82 @@
+# Core LangChain dependencies
+langchain==0.1.0
+langchain-community==0.0.10
+langchain-openai==0.0.5
+
+# Vector database and embeddings
+chromadb==0.4.22
+sentence-transformers==2.2.2
+
+# Web interface
+fastapi==0.104.1
+uvicorn==0.24.0
+jinja2==3.1.2
+
+# Environment and configuration
+python-dotenv==1.0.0
+
+# Additional utilities
+requests==2.31.0
+pydantic==2.5.0
+typing-extensions==4.8.0
+psutil==5.9.6
+
+# Optional: For enhanced capabilities
+beautifulsoup4==4.12.2
+python-multipart==0.0.6
+
+# Performance monitoring and optimization
+prometheus-client==0.19.0
+dataclasses-json==0.6.3
+
+# Testing dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+
+# Security and validation
+pydantic[email]==2.5.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Enhanced logging and monitoring
+structlog==23.2.0
+colorama==0.4.6
+
+# Development tools
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Hugging Face and Multiple LLM Support
+transformers==4.35.2
+torch==2.1.1
+torchaudio==2.1.1
+accelerate==0.24.1
+bitsandbytes==0.41.3
+peft==0.7.1
+trl==0.7.4
+datasets==2.14.6
+tokenizers==0.15.0
+
+# Voice Synthesis and Audio Processing
+TTS==0.22.0
+pyttsx3==2.90
+soundfile==0.12.1
+librosa==0.10.1
+numpy==1.24.3
+scipy==1.11.4
+webrtcvad==2.0.10
+pyaudio==0.2.11
+wave==0.0.2
+
+# Audio Streaming and WebRTC
+aiortc==1.5.0
+websockets==12.0
+aiofiles==23.2.1
+
+# Additional AI/ML Libraries
+scikit-learn==1.3.2
+pandas==2.1.4
+matplotlib==3.8.2
+seaborn==0.13.0 
