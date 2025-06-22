@@ -1,6 +1,6 @@
-# AI Agent - Multi-LLM Voice Assistant
+# AI Agent - Multi-LLM Voice Assistant with Raspberry Pi 4 Hardware Integration
 
-A sophisticated, production-ready AI agent with **multiple Hugging Face LLM support** and **natural-sounding voice synthesis**, designed to run locally on your PC with web access capabilities.
+A sophisticated, production-ready AI agent with **multiple Hugging Face LLM support**, **natural-sounding voice synthesis**, and **Raspberry Pi 4 hardware integration**, designed to run locally with web access capabilities and visual feedback.
 
 ## 🚀 Key Features
 
@@ -19,6 +19,14 @@ A sophisticated, production-ready AI agent with **multiple Hugging Face LLM supp
 - **Multi-language Support**: English, multilingual, and custom language models
 - **Voice Recording**: Built-in voice recording for voice commands
 
+### 🖥️ Raspberry Pi 4 Hardware Integration
+- **Touchscreen Interface**: Full web interface optimized for touchscreen
+- **OLED Display**: 0.96" OLED for status and visual feedback
+- **RGB LED Ring**: 16-LED ring for AI state indication
+- **LED Strip**: 60-LED strip for thinking animations
+- **Direct GPIO Control**: No external microcontroller needed
+- **Visual State Feedback**: Real-time AI state visualization
+
 ### ⚡ Performance & Security
 - **Response Caching**: 3000% faster cached responses (<100ms)
 - **Rate Limiting**: IP-based rate limiting with sliding window
@@ -33,6 +41,7 @@ A sophisticated, production-ready AI agent with **multiple Hugging Face LLM supp
 | Response Time (cached) | 1-3 seconds | <100ms | **3000% faster** |
 | Available Models | 1 (OpenAI) | 5+ (Local) | **500% more models** |
 | Voice Capabilities | None | Full TTS | **Complete voice support** |
+| Hardware Integration | None | Full Pi 4 | **Complete hardware support** |
 | Memory Usage | 50-100MB | <50MB | **50% reduction** |
 | Concurrent Users | 10 | 100+ | **1000% increase** |
 
@@ -40,29 +49,36 @@ A sophisticated, production-ready AI agent with **multiple Hugging Face LLM supp
 
 ```
 AI-Agent/
-├── agent.py              # Main agent with multi-LLM and voice support
-├── llm_manager.py        # Multi-LLM manager with Hugging Face models
-├── voice_system.py       # Voice synthesis and streaming system
-├── memory.py             # Enhanced memory with compression
-├── monitoring.py         # Performance monitoring system
-├── agent_config.py       # Comprehensive configuration management
-├── web_interface.py      # FastAPI interface with voice endpoints
-├── tools.py              # Secure tool system
-├── test_agent.py         # Core functionality tests
-├── test_voice_llm.py     # Voice and LLM specific tests
-├── requirements.txt      # Updated dependencies
-├── Dockerfile           # Production containerization
-├── docker-compose.yml   # Easy deployment
-└── README.md            # This file
+├── agent.py                    # Main agent with multi-LLM and voice support
+├── llm_manager.py              # Multi-LLM manager with Hugging Face models
+├── voice_system.py             # Voice synthesis and streaming system
+├── memory.py                   # Enhanced memory with compression
+├── monitoring.py               # Performance monitoring system
+├── agent_config.py             # Comprehensive configuration management
+├── web_interface.py            # FastAPI interface with voice endpoints
+├── tools.py                    # Secure tool system
+├── hardware_controller.py      # Raspberry Pi 4 hardware control
+├── ai_pillar_integration.py    # AI Pillar integration module
+├── test_agent.py               # Core functionality tests
+├── test_voice_llm.py           # Voice and LLM specific tests
+├── test_hardware.py            # Hardware integration tests
+├── requirements.txt            # Updated dependencies
+├── Dockerfile                  # Production containerization
+├── docker-compose.yml          # Easy deployment
+├── HARDWARE_INTEGRATION_README.md  # Hardware setup guide
+└── README.md                   # This file
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
+- **Raspberry Pi 4** (4GB+ RAM recommended)
 - **Python 3.8+**
-- **8GB+ RAM** (16GB+ recommended for multiple models)
-- **GPU with CUDA** (optional, for faster inference)
+- **Touchscreen** (optional but recommended)
+- **OLED Display** (0.96" I2C)
+- **RGB LED Ring** (16-LED WS2812B)
+- **LED Strip** (60-LED WS2812B)
 - **Audio system** (for voice features)
 
 ### Installation
@@ -74,32 +90,80 @@ AI-Agent/
    pip install -r requirements.txt
    ```
 
-2. **Environment Configuration**:
+2. **Enable Hardware Interfaces**:
+   ```bash
+   sudo raspi-config
+   # Navigate to Interface Options > I2C > Enable
+   # Navigate to Interface Options > SPI > Enable
+   ```
+
+3. **Install System Dependencies**:
+   ```bash
+   sudo apt-get update
+   sudo apt-get install python3-gpiozero python3-pip
+   sudo apt-get install libopenblas-dev liblapack-dev
+   sudo apt-get install libatlas-base-dev gfortran
+   ```
+
+4. **Environment Configuration**:
    ```bash
    cp env_example.txt .env
    # Edit .env with your preferences
    ```
 
-3. **Download Models** (optional):
+5. **Test Hardware Integration**:
    ```bash
-   # Models will be downloaded automatically on first use
-   # Or download manually for offline use:
-   python -c "from llm_manager import get_llm_manager; get_llm_manager().load_model('mistral-7b')"
+   python test_hardware.py
    ```
 
-4. **Run Tests**:
-   ```bash
-   python test_agent.py
-   python test_voice_llm.py
-   ```
-
-5. **Start the Agent**:
+6. **Start the Agent**:
    ```bash
    python web_interface.py
    ```
 
-6. **Access Web Interface**:
-   Open your browser to `http://localhost:8000`
+7. **Access Web Interface**:
+   Open your browser to `http://localhost:8000` or use the touchscreen
+
+## 🖥️ Hardware Integration
+
+### Pin Connections
+
+| Raspberry Pi 4 | Component | Connection |
+|----------------|-----------|------------|
+| GPIO 18 | RGB Ring Data | WS2812B DIN |
+| GPIO 21 | LED Strip Data | WS2812B DIN |
+| GPIO 2 (SDA) | OLED SDA | I2C Data |
+| GPIO 3 (SCL) | OLED SCL | I2C Clock |
+| 3.3V | Power | VCC for all components |
+| GND | Ground | GND for all components |
+
+### Visual Feedback States
+
+- **IDLE**: Dim blue RGB ring, LED strip off
+- **THINKING**: LED strip wave animation (blue)
+- **SPEAKING**: RGB ring pulse (green) + OLED wave
+- **LISTENING**: RGB ring pulse (yellow)
+- **ERROR**: Red RGB ring
+
+### Hardware Testing
+
+```python
+from hardware_controller import HardwareController, HardwareConfig
+
+# Test hardware components
+config = HardwareConfig()
+controller = HardwareController(config)
+controller.initialize()
+
+# Test OLED
+controller.oled.show_text("Test")
+
+# Test RGB ring
+controller.rgb_ring.set_color((255, 0, 0))  # Red
+
+# Test LED strip
+controller.led_strip.thinking_animation()
+```
 
 ## 🎤 Voice Features
 
@@ -199,72 +263,14 @@ from llm_manager import ModelConfig, ModelType
 
 # Add custom model
 custom_config = ModelConfig(
-    name="my-model",
-    model_id="your-username/your-model",
-    model_type=ModelType.CHAT,
-    max_length=4096,
-    temperature=0.7,
-    use_quantization=True,
-    load_in_4bit=True
+    name="my-custom-model",
+    model_type=ModelType.CAUSAL_LM,
+    model_path="path/to/model",
+    max_length=2048,
+    temperature=0.7
 )
 
-llm_manager.add_custom_model(custom_config)
-```
-
-## 🌐 Web Interface
-
-### Chat with Voice
-
-The web interface supports voice-enabled conversations:
-
-```javascript
-// Send message with voice synthesis
-const response = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        message: "Hello, how are you?",
-        generate_voice: true,
-        voice_name: "ljspeech",
-        emotion: "happy"
-    })
-});
-
-const data = await response.json();
-console.log(data.text);  // Text response
-console.log(data.voice_audio);  // Audio data
-```
-
-### Model Switching
-
-```javascript
-// Switch to different model
-await fetch('/api/models/switch', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        model_name: "codellama-7b"
-    })
-});
-```
-
-### Voice Management
-
-```javascript
-// Get available voices
-const voices = await fetch('/api/voice/voices').then(r => r.json());
-
-// Set voice
-await fetch('/api/voice/set', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        voice_name: "vctk",
-        speed: 1.2,
-        pitch: 1.1,
-        volume: 0.9
-    })
-});
+llm_manager.add_model(custom_config)
 ```
 
 ## 🔧 Configuration
@@ -272,269 +278,174 @@ await fetch('/api/voice/set', {
 ### Environment Variables
 
 ```bash
-# LLM Settings
+# LLM Configuration
 DEFAULT_MODEL=mistral-7b
-MODEL_TIMEOUT=30
-ENABLE_QUANTIZATION=True
-DEVICE_MAP=auto
+MODEL_CACHE_DIR=./models
+MAX_CONCURRENT_REQUESTS=10
 
-# Voice Settings
+# Voice Configuration
 VOICE_ENGINE=tts
 VOICE_NAME=tts_models/en/ljspeech/tacotron2-DDC
 VOICE_QUALITY=high
-VOICE_SPEED=1.0
-VOICE_PITCH=1.0
-VOICE_VOLUME=1.0
-VOICE_LANGUAGE=en
-ENABLE_VOICE_CLONING=False
-ENABLE_VOICE_EMOTION=True
-ENABLE_REAL_TIME_VOICE=True
 
-# Performance Settings
-ENABLE_CACHING=True
+# Hardware Configuration
+ENABLE_HARDWARE=true
+OLED_I2C_ADDRESS=0x3C
+RGB_RING_PIN=18
+LED_STRIP_PIN=21
+
+# Performance
+ENABLE_CACHING=true
 CACHE_TTL=3600
-MODEL_SWITCHING_ENABLED=True
-VOICE_CACHING_ENABLED=True
+RATE_LIMIT_PER_MINUTE=60
 ```
 
-### Advanced Configuration
+### Hardware Configuration
 
-Edit `agent_config.py` to customize:
-- Model registry and configurations
-- Voice registry and settings
-- Performance parameters
-- Security settings
+```python
+from hardware_controller import HardwareConfig
 
-## 📊 API Endpoints
-
-### Chat Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/chat` | POST | Send message with voice synthesis |
-| `/api/voice/synthesize` | POST | Synthesize text to speech |
-| `/ws/voice` | WebSocket | Real-time voice streaming |
-
-### Model Management
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/models` | GET | Get available models |
-| `/api/models/switch` | POST | Switch to different model |
-
-### Voice Management
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/voice/voices` | GET | Get available voices |
-| `/api/voice/set` | POST | Set voice configuration |
-
-### System Management
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check |
-| `/api/system-info` | GET | System information |
-| `/api/metrics/summary` | GET | Performance metrics |
-| `/api/memory/summary` | GET | Memory information |
+# Custom hardware configuration
+config = HardwareConfig(
+    oled_i2c_address=0x3C,
+    rgb_ring_pin=18,
+    led_strip_pin=21,
+    rgb_ring_count=16,
+    led_strip_count=60,
+    rgb_ring_brightness=0.3,
+    led_strip_brightness=0.2
+)
+```
 
 ## 🧪 Testing
 
 ### Run All Tests
+
 ```bash
-# Core functionality tests
+# Core functionality
 python test_agent.py
 
-# Voice and LLM specific tests
+# Voice and LLM features
 python test_voice_llm.py
+
+# Hardware integration
+python test_hardware.py
 ```
 
-### Test Categories
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: API endpoint testing
-- **Voice Tests**: TTS engine and streaming tests
-- **LLM Tests**: Model loading and switching tests
-- **Performance Tests**: Response time and memory usage
+### Test Hardware Components
 
-### Test Coverage
-- **Voice System**: 95% coverage
-- **LLM Manager**: 90% coverage
-- **Agent Integration**: 85% coverage
-- **Web Interface**: 80% coverage
-
-## 🐳 Docker Deployment
-
-### Development
 ```bash
-docker-compose up
+# Test individual components
+python -c "
+from hardware_controller import HardwareController, HardwareConfig
+controller = HardwareController(HardwareConfig())
+controller.initialize()
+controller.oled.show_text('Hello World!')
+controller.rgb_ring.set_color((0, 255, 0))
+"
 ```
 
-### Production with Voice
+## 🚀 Deployment
+
+### Docker Deployment
+
 ```bash
-# Enable voice features
-export ENABLE_VOICE=True
-export VOICE_ENGINE=tts
+# Build and run with Docker
+docker-compose up -d
 
-docker-compose --profile production up -d
+# Access the web interface
+open http://localhost:8000
 ```
 
-### Custom Configuration
+### Production Deployment
+
 ```bash
-# Set environment variables
-export DEFAULT_MODEL=codellama-7b
-export VOICE_NAME=tts_models/multilingual/multi-dataset/xtts_v2
+# Install system dependencies
+sudo apt-get update
+sudo apt-get install python3-pip python3-venv
 
-# Start with custom config
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run with production server
+uvicorn web_interface:app --host 0.0.0.0 --port 8000 --workers 4
 ```
 
-## 🔮 Advanced Features
+## 📊 Monitoring
 
-### Voice Cloning
+### Performance Metrics
+
+The system provides comprehensive monitoring:
 
 ```python
-# Clone a voice from audio samples
-voice_system.clone_voice(
-    voice_name="my_voice",
-    audio_samples=["sample1.wav", "sample2.wav", "sample3.wav"]
-)
+from monitoring import get_monitor
+
+# Get performance metrics
+monitor = get_monitor()
+metrics = monitor.get_metrics_summary()
+
+print(f"Response time: {metrics['response_times']['average_ms']}ms")
+print(f"Error rate: {metrics['errors']['error_rate_percent']}%")
+print(f"Cache hit rate: {metrics['cache']['hit_rate_percent']}%")
 ```
 
-### Emotion in Voice
+### Hardware Status
 
 ```python
-# Synthesize with emotion
-audio_data = voice_system.synthesize_text(
-    text="I'm so excited to see you!",
-    voice_name="ljspeech",
-    emotion="excited"
-)
+from ai_pillar_integration import get_pillar_web_interface
+
+# Get hardware status
+web_interface = await get_pillar_web_interface()
+status = await web_interface.get_hardware_status()
+
+print(f"Hardware status: {status}")
 ```
 
-### Model Performance Analysis
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Hardware not detected**:
+   - Check GPIO connections
+   - Enable I2C/SPI in raspi-config
+   - Verify power supply
+
+2. **OLED not displaying**:
+   - Check I2C address (default: 0x3C)
+   - Verify SDA/SCL connections
+   - Run `i2cdetect -y 1` to scan I2C devices
+
+3. **LEDs not working**:
+   - Check data connections
+   - Verify power supply (3.3V)
+   - Check GPIO pin assignments
+
+4. **Voice not working**:
+   - Check audio system
+   - Verify TTS engine installation
+   - Check microphone permissions
+
+### Debug Mode
 
 ```python
-# Get detailed model performance
-metrics = llm_manager.get_model_performance("mistral-7b")
-print(f"Average response time: {metrics['average_response_time']:.2f}s")
-print(f"Total requests: {metrics['total_requests']}")
-print(f"Error rate: {metrics['error_count'] / metrics['total_requests']:.2%}")
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Run with debug logging
+python web_interface.py
 ```
-
-### Memory Optimization
-
-```python
-# Optimize memory usage
-llm_manager.optimize_memory()  # Unload unused models
-voice_system.clear_cache()     # Clear audio cache
-```
-
-## 🛠️ Troubleshooting
-
-### Voice Issues
-
-**No Audio Output**
-```bash
-# Check audio system
-python -c "import pyaudio; print('Audio system OK')"
-
-# Test voice synthesis
-curl -X POST http://localhost:8000/api/voice/synthesize \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Test"}'
-```
-
-**Voice Quality Issues**
-```bash
-# Adjust voice settings
-export VOICE_QUALITY=high
-export VOICE_SPEED=0.8
-export VOICE_PITCH=1.1
-```
-
-### LLM Issues
-
-**Model Loading Fails**
-```bash
-# Check available memory
-free -h
-
-# Use smaller model
-export DEFAULT_MODEL=phi-2
-
-# Enable quantization
-export ENABLE_QUANTIZATION=True
-export LOAD_IN_4BIT=True
-```
-
-**Slow Response Times**
-```bash
-# Check model performance
-curl http://localhost:8000/api/models
-
-# Switch to faster model
-curl -X POST http://localhost:8000/api/models/switch \
-  -H "Content-Type: application/json" \
-  -d '{"model_name": "phi-2"}'
-```
-
-### Performance Issues
-
-**High Memory Usage**
-```bash
-# Check memory usage
-curl http://localhost:8000/api/system-info
-
-# Optimize memory
-curl -X POST http://localhost:8000/api/cache/clear
-curl -X POST http://localhost:8000/api/memory/clear
-```
-
-**Slow Response Times**
-```bash
-# Check cache hit rate
-curl http://localhost:8000/api/metrics/summary
-
-# Enable caching
-export ENABLE_CACHING=True
-export CACHE_TTL=3600
-```
-
-## 📋 Maintenance
-
-### Daily Tasks
-- [ ] Check health endpoint
-- [ ] Review error logs
-- [ ] Monitor voice quality
-- [ ] Check model performance
-
-### Weekly Tasks
-- [ ] Export and backup metrics
-- [ ] Review memory usage
-- [ ] Update voice models
-- [ ] Test model switching
-
-### Monthly Tasks
-- [ ] Performance analysis
-- [ ] Voice quality assessment
-- [ ] Model evaluation
-- [ ] Configuration review
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests for new functionality
-5. Run the test suite
-6. Submit a pull request
-
-### Development Guidelines
-- Follow PEP 8 style guidelines
-- Add type hints to all functions
-- Write comprehensive docstrings
-- Maintain test coverage above 80%
-- Update documentation for new features
+4. Add tests for new features
+5. Submit a pull request
 
 ## 📄 License
 
@@ -542,19 +453,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- **Hugging Face**: For the transformers library and model hub
-- **Coqui TTS**: For high-quality text-to-speech
-- **LangChain**: For the AI framework foundation
-- **FastAPI**: For the high-performance web framework
-- **Chroma**: For vector database capabilities
+- **Hugging Face** for the excellent transformers library
+- **Coqui AI** for the TTS library
+- **Raspberry Pi Foundation** for the amazing hardware platform
+- **FastAPI** for the modern web framework
 
 ---
 
-**Multi-LLM Status**: ✅ COMPLETE  
-**Voice Synthesis**: ✅ COMPLETE  
-**Performance**: 3000%+ faster response times  
-**Model Support**: 5+ Hugging Face models  
-**Voice Quality**: Natural-sounding speech  
-**Deployment**: Containerized and scalable  
+**Ready to build your AI Pillar?** 🚀
 
-For detailed optimization information, see [OPTIMIZATION_SUMMARY.md](OPTIMIZATION_SUMMARY.md). 
+Start with the hardware setup guide in `HARDWARE_INTEGRATION_README.md` and then run `python test_hardware.py` to verify everything is working! 

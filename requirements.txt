@@ -81,20 +81,21 @@ pandas==2.1.4
 matplotlib==3.8.2
 seaborn==0.13.0
 
-# Hardware Integration Dependencies
-# ESP32 and Serial Communication
-pyserial==3.5
-websocket-client==1.6.4
+# Raspberry Pi 4 Hardware Integration Dependencies
+# GPIO Control
+RPi.GPIO==0.7.1
 
-# OLED Display (for Raspberry Pi)
-# Note: These are optional and only needed if running on Raspberry Pi
-# Pillow==10.1.0  # For OLED display image processing
-# adafruit-circuitpython-ssd1306==3.3.8  # For OLED display control
+# OLED Display (I2C)
+Pillow==10.1.0  # For OLED display image processing
+adafruit-circuitpython-ssd1306==3.3.8  # For OLED display control
+adafruit-circuitpython-busdevice==5.2.6  # I2C bus support
 
-# RGB LED Control (for Raspberry Pi)
-# Note: These are optional and only needed if running on Raspberry Pi
-# rpi.gpio==0.7.1  # For GPIO control
-# neopixel==1.0.0  # For WS2812B LED control
+# RGB LED Control (WS2812B/NeoPixel)
+adafruit-circuitpython-neopixel==6.4.1  # For WS2812B LED control
 
-# WebSocket for real-time communication
+# Touchscreen Support
+pygame==2.5.2  # For touchscreen interface
+tkinter  # Usually comes with Python, for GUI fallback
+
+# WebSocket for real-time communication (if needed)
 websockets==12.0 
